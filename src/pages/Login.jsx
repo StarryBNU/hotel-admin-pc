@@ -20,7 +20,7 @@ const loginT = {
     welcome: "欢迎回来", sub: "登录以管理您的酒店列表",
     user: "用户名", pass: "密码", btn: "登 录",
     new: "新用户？", create: "创建商户账号",
-    title: "一宿平台", subtitle: "专业酒店信息管理系统",
+    title: "易宿平台", subtitle: "专业酒店信息管理系统",
     f1: "实时信息同步", f2: "商户与管理员角色", f3: "安全审核工作流"
   }
 };
@@ -87,4 +87,4 @@ const Login = ({ lang = 'en', setLang = () => {} }) => {
     </div>
   );
 };
-export default Login;
+export default Login;   

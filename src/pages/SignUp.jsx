@@ -35,7 +35,7 @@ const signupT = {
     mismatch: "The two passwords that you entered do not match!"
   },
   zh: {
-    title: "一宿平台",
+    title: "易宿平台",
     subtitle: "加入我们的专业商户合作伙伴网络",
     f1: "账户即时激活",
     f2: "安全的酒店数据存储",

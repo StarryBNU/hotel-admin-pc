@@ -8,7 +8,7 @@ const { Text } = Typography;
 
 const translations = {
   en: { title: 'YI-SU', overview: 'Overview', register: 'Register', myHotels: 'My Hotels', audit: 'Audit', logout: 'Logout', admin: 'ADMIN', merch: 'MERCHANT' },
-  zh: { title: '一宿管理', overview: '概览', register: '注册酒店', myHotels: '我的酒店', audit: '审核中心', logout: '退出', admin: '管理端', merch: '商户端' }
+  zh: { title: '易宿管理', overview: '概览', register: '注册酒店', myHotels: '我的酒店', audit: '审核中心', logout: '退出', admin: '管理端', merch: '商户端' }
 };
 
 const MainLayout = ({ lang, setLang }) => {
