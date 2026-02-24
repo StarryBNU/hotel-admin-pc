@@ -7,7 +7,8 @@ import {
   SafetyOutlined,
   CheckCircleOutlined,
   GlobalOutlined,
-  CloudServerOutlined
+  CloudServerOutlined,
+  UserAddOutlined
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 
@@ -17,6 +18,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   const onFinish = (values) => {
+    // This allows you to log in as either role based on the Radio selection
     localStorage.setItem('userRole', values.role);
     navigate('/dashboard');
   };
@@ -47,7 +49,6 @@ const Login = () => {
           
           <Divider style={{ borderColor: 'rgba(255,255,255,0.15)', width: '80%', margin: '0 auto 40px' }} />
           
-          {/* Centered Feature List block */}
           <div style={{ display: 'inline-block', textAlign: 'left' }}>
             <Space direction="vertical" size="large">
               <div style={{ fontSize: '18px', color: 'rgba(255,255,255,0.9)' }}>
@@ -109,6 +110,24 @@ const Login = () => {
             <Button type="primary" htmlType="submit" block size="large" style={{ height: '50px', marginTop: '10px', borderRadius: '8px' }}>
               Sign In
             </Button>
+
+            {/* --- NEW SIGN UP SECTION --- */}
+            <Divider plain>
+              <Text type="secondary" style={{ fontSize: '12px' }}>New to the platform?</Text>
+            </Divider>
+
+            <div style={{ textAlign: 'center' }}>
+              <Button 
+                type="default" 
+                icon={<UserAddOutlined />} 
+                block 
+                size="large"
+                onClick={() => navigate('/signup')}
+                style={{ borderRadius: '8px' }}
+              >
+                Create Merchant Account
+              </Button>
+            </div>
           </Form>
         </div>
       </Col>
