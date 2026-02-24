@@ -39,7 +39,7 @@ const entryT = {
   },
   zh: {
     regTitle: "注册新酒店",
-    regSub: "输入物业详情以供管理员审核。",
+    regSub: "输入酒店详情以供管理员审核。",
     sectionBasic: "基本信息",
     sectionRooms: "房型与定价",
     nameCn: "酒店名称 (中文)",

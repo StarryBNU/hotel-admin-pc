@@ -23,7 +23,7 @@ const myHotelsT = {
     }
   },
   zh: {
-    cardTitle: "我的提交跟踪",
+    cardTitle: "我的提交",
     colHotel: "酒店名称",
     colStatus: "状态",
     colFeedback: "管理员反馈",
