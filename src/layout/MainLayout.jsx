@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Layout, Menu, Button, theme, Typography, Space } from 'antd';
+import { Layout, Menu, Button, theme, Typography, Space, Switch, Divider } from 'antd';
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -9,17 +9,44 @@ import {
   PlusCircleOutlined,
   LogoutOutlined,
   UserOutlined,
+  GlobalOutlined
 } from '@ant-design/icons';
 import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 
 const { Header, Sider, Content } = Layout;
 const { Text } = Typography;
 
-const MainLayout = () => {
+// 1. DEFINE TRANSLATIONS (This fixes the ReferenceError)
+const translations = {
+  en: {
+    title: 'YI-SU ADMIN',
+    overview: 'Overview',
+    register: 'Register Hotel',
+    myHotels: 'My Hotels',
+    audit: 'Audit Center',
+    merchantPanel: 'MERCHANT PANEL',
+    adminPanel: 'ADMIN PANEL',
+    logout: 'Logout',
+  },
+  zh: {
+    title: '一宿管理',
+    overview: '概览',
+    register: '注册酒店',
+    myHotels: '我的酒店',
+    audit: '审核中心',
+    merchantPanel: '商户面板',
+    adminPanel: '管理面板',
+    logout: '退出登录',
+  }
+};
+
+const MainLayout = ({ lang = 'en', setLang = () => {} }) => {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const userRole = localStorage.getItem('userRole') || 'merchant';
+  
+  const t = translations[lang] || translations['en'];
 
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -31,39 +58,17 @@ const MainLayout = () => {
   };
 
   const menuItems = [
-    {
-      key: '/dashboard',
-      icon: <DashboardOutlined />,
-      label: 'Overview',
-    },
-    {
-      key: '/dashboard/hotel-entry',
-      icon: <PlusCircleOutlined />,
-      label: 'Register Hotel',
-      disabled: userRole === 'admin',
-    },
-    {
-      key: '/dashboard/my-hotels',
-      icon: <ShopOutlined />,
-      label: 'My Hotels',
-      disabled: userRole === 'admin',
-    },
-    {
-      key: '/dashboard/audit',
-      icon: <CheckSquareOutlined />,
-      label: 'Audit Center',
-      disabled: userRole === 'merchant',
-    },
+    { key: '/dashboard', icon: <DashboardOutlined />, label: t.overview },
+    { key: '/dashboard/hotel-entry', icon: <PlusCircleOutlined />, label: t.register, disabled: userRole === 'admin' },
+    { key: '/dashboard/my-hotels', icon: <ShopOutlined />, label: t.myHotels, disabled: userRole === 'admin' },
+    { key: '/dashboard/audit', icon: <CheckSquareOutlined />, label: t.audit, disabled: userRole === 'merchant' },
   ];
 
   return (
-    <Layout style={{ minHeight: '100vh', width: '100vw' }}>
-      {/* Sidebar Navigation */}
-      <Sider trigger={null} collapsible collapsed={collapsed} theme="dark" width={250}>
-        <div style={{ height: 64, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#002140' }}>
-          <Text style={{ color: 'white', fontWeight: 'bold', fontSize: collapsed ? '12px' : '18px' }}>
-            {collapsed ? 'YS' : 'YI-SU ADMIN'}
-          </Text>
+    <Layout style={{ minHeight: '100vh' }}>
+      <Sider trigger={null} collapsible collapsed={collapsed}>
+        <div style={{ height: 64, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}>
+          {collapsed ? 'YS' : t.title}
         </div>
         <Menu
           theme="dark"
@@ -71,63 +76,36 @@ const MainLayout = () => {
           selectedKeys={[location.pathname]}
           items={menuItems}
           onClick={({ key }) => navigate(key)}
-          style={{ marginTop: 16 }}
         />
       </Sider>
-
       <Layout>
-        {/* Top Header Bar */}
-        <Header style={{ 
-          padding: '0 24px 0 0', 
-          background: colorBgContainer, 
-          display: 'flex', 
-          alignItems: 'center',
-          boxShadow: '0 1px 4px rgba(0,21,41,.08)',
-          zIndex: 1
-        }}>
-          {/* 1. Left: Collapse Toggle */}
+        <Header style={{ padding: '0 24px', background: colorBgContainer, display: 'flex', alignItems: 'center' }}>
           <Button
             type="text"
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             onClick={() => setCollapsed(!collapsed)}
-            style={{ fontSize: '16px', width: 64, height: 64 }}
           />
-
-          {/* 2. THE SPACER: This pushes everything after it to the right */}
           <div style={{ flex: 1 }} />
-
-          {/* 3. Right: User Role and Logout Button */}
-          <Space size="large" style={{ paddingRight: '24px' }}>
+          <Space size="large">
+            {/* Fix: Space direction is deprecated in some versions, 
+                Ant Design uses 'direction="vertical/horizontal"'. 
+                The warning suggests checking your specific antd version. */}
             <Space>
-              <UserOutlined style={{ color: '#1890ff' }} />
-              <Text strong>{userRole.toUpperCase()} PANEL</Text>
+              <GlobalOutlined />
+              <Switch 
+                checkedChildren="中" 
+                unCheckedChildren="EN" 
+                checked={lang === 'zh'}
+                onChange={(checked) => setLang(checked ? 'zh' : 'en')}
+              />
             </Space>
-            <Button 
-              type="primary" 
-              danger 
-              ghost 
-              icon={<LogoutOutlined />} 
-              onClick={handleLogout}
-            >
-              Logout
-            </Button>
+            <Divider type="vertical" />
+            <Text strong>{userRole === 'admin' ? t.adminPanel : t.merchantPanel}</Text>
+            <Button icon={<LogoutOutlined />} onClick={handleLogout}>{t.logout}</Button>
           </Space>
         </Header>
-
-        {/* Content Area */}
-        <Content
-          style={{
-            margin: '24px',
-            padding: 24,
-            background: colorBgContainer,
-            borderRadius: borderRadiusLG,
-            minHeight: 280,
-            overflow: 'auto'
-          }}
-        >
-          <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
-            <Outlet />
-          </div>
+        <Content style={{ margin: '24px', padding: 24, background: colorBgContainer, borderRadius: borderRadiusLG }}>
+          <Outlet context={{ lang }} />
         </Content>
       </Layout>
     </Layout>
